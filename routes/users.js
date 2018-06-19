@@ -9,6 +9,25 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
+router.get('/logined', function(req, res, next) {
+    if(req.session.logined == true){
+        res.status(200);
+        res.set({
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+        });
+        res.json({"logined": "success"});
+    }
+    else{
+        res.status(200);
+        res.set({
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+        });
+        res.json({"logined": "false"});
+    }
+});
+
 router.post('/register', function(req, res, next) {
 
     console.log(req.body.name);
@@ -87,13 +106,15 @@ router.post('/login', function(req, res, next) {
         } else {
             if (logindata[0].password === req.body.password) {
                 req.session.name = logindata[0].name;
-                // req.session.schoolNum = logindata[0].schoolNum;
-                // req.session.email = logindata[0].email;
-                // req.session.password = logindata[0].password;
-                // req.session.address = logindata[0].address;
-                // req.session.privateKey = logindata[0].privateKey;
-                // req.session.logined = true;
+                req.session.schoolNum = logindata[0].schoolNum;
+                req.session.email = logindata[0].email;
+                req.session.password = logindata[0].password;
+                req.session.address = logindata[0].address;
+                req.session.privateKey = logindata[0].privateKey;
+                req.session.logined = true;
+
                 console.log(req.session.email);
+                console.log("登入成功");
                 res.status(200);
                 res.set({
                     'Content-Type': 'application/json',

@@ -16,8 +16,8 @@ var session = require("express-session");
 //配置中间件
 app.use(cookieParser());
 app.use(session({
-    secret: 'this is a string key',   // 随机字符串，作为服务器端生成 session 的签名
-    name:'session_id', /*保存在本地cookie的一个sessionID 默认connect.sid  可以不设置*/
+    secret: 'trygong',   // 随机字符串，作为服务器端生成 session 的签名
+    name:'trygong_session_id', /*保存在本地cookie的一个sessionID 默认connect.sid  可以不设置*/
     resave: false,   /*强制保存 session 即使它并没有变化,。默认为 true。建议设置成 false。*/
     saveUninitialized: true,   //强制将未初始化(未使用session)的session存储。  默认值是true  建议设置成true
     cookie: {
@@ -40,7 +40,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(cors()); // use CORS
+app.use(cors({credentials: true})); // use CORS
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
