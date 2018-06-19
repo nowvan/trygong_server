@@ -11,6 +11,14 @@ router.get('/', function(req, res, next) {
 
 router.post('/register', function(req, res, next) {
 
+    console.log(req.body.name);
+    console.log(req.body.schoolNum);
+    console.log(req.body.email);
+    console.log(req.body.password);
+    console.log(req.body.address);
+    console.log(req.body.privateKey);
+
+
     Logindata.find({
         school_number : req.body.schoolNum
 
@@ -48,9 +56,12 @@ router.post('/register', function(req, res, next) {
                     });
         } else {
             req.session.logined = false;
-            res.render('users/register', {
-                message : "公司名稱 : " + req.body.companyname + " 被註冊過了喔 "
+            res.status(200);
+            res.set({
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
             });
+            res.json({"name": req.session.name});
         }
     });
 });
