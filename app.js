@@ -14,6 +14,7 @@ var app = express();
 
 var session = require("express-session");
 //配置中间件
+app.use(cookieParser());
 app.use(session({
     secret: 'this is a string key',   // 随机字符串，作为服务器端生成 session 的签名
     name:'session_id', /*保存在本地cookie的一个sessionID 默认connect.sid  可以不设置*/
@@ -36,7 +37,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cors()); // use CORS

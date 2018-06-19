@@ -52,7 +52,7 @@ router.post('/register', function(req, res, next) {
                             'Content-Type': 'application/json',
                             'Access-Control-Allow-Origin': '*'
                         });
-                        res.json({"name": req.session.name});
+                        res.json({"message": "註冊成功"});
                     });
         } else {
             req.session.logined = false;
@@ -61,10 +61,64 @@ router.post('/register', function(req, res, next) {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
             });
-            res.json({"name": req.session.name});
+            res.json({"message": "註冊失敗"});
         }
     });
 });
+
+router.post('/login', function(req, res, next) {
+
+    console.log(req.body.schoolNum);
+    console.log(req.body.password);
+
+    Logindata.find({
+        school_number : req.body.schoolNum
+    }, function(err, logindata, count) {
+        console.log(logindata);
+        //沒找到帳號
+        if (logindata.length === 0) {
+            req.session.logined = false;
+            res.status(200);
+            res.set({
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            });
+            res.json({"message": "此學號沒有註冊過"});
+        } else {
+            if (logindata[0].password === req.body.password) {
+                req.session.name = logindata[0].name;
+                // req.session.schoolNum = logindata[0].schoolNum;
+                // req.session.email = logindata[0].email;
+                // req.session.password = logindata[0].password;
+                // req.session.address = logindata[0].address;
+                // req.session.privateKey = logindata[0].privateKey;
+                // req.session.logined = true;
+                console.log(req.session.email);
+                res.status(200);
+                res.set({
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                });
+                res.json({"name": logindata[0].name});
+
+
+            } else { //沒找到密碼
+                req.session.logined = false;
+                res.status(200);
+                res.set({
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                });
+                res.json({"message": "密碼錯誤請重新輸入"});
+            }
+        }
+    });
+});
+
+
+
+
+
 
 
 
