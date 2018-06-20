@@ -9,24 +9,24 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
-router.get('/logined', function(req, res, next) {
-    if(req.session.logined == true){
-        res.status(200);
-        res.set({
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-        });
-        res.json({"logined": "success"});
-    }
-    else{
-        res.status(200);
-        res.set({
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-        });
-        res.json({"logined": "false"});
-    }
-});
+// router.get('/logined', function(req, res, next) {
+//     if(req.session.logined == true){
+//         res.status(200);
+//         res.set({
+//             'Content-Type': 'application/json',
+//             'Access-Control-Allow-Origin': '*'
+//         });
+//         res.json({"logined": "success"});
+//     }
+//     else{
+//         res.status(200);
+//         res.set({
+//             'Content-Type': 'application/json',
+//             'Access-Control-Allow-Origin': '*'
+//         });
+//         res.json({"logined": "false"});
+//     }
+// });
 
 router.post('/register', function(req, res, next) {
 
@@ -37,13 +37,12 @@ router.post('/register', function(req, res, next) {
     console.log(req.body.address);
     console.log(req.body.privateKey);
 
-
     Logindata.find({
         school_number : req.body.schoolNum
 
     }, function(err, logindatas, count) {
         console.log(logindatas);
-        //檢查公司名稱有沒有被註冊過  怕其他人隨意註冊公司可以去修改別人的資料
+        //檢查學號有沒有被註冊過  怕其他人隨意註冊公司可以去修改別人的資料
         if (logindatas.length === 0) {
                     new Logindata({
                         name: req.body.name,
@@ -58,13 +57,13 @@ router.post('/register', function(req, res, next) {
                             return;
                         }
                         console.log('Logindata Save to DB.');
-                        req.session.name = req.body.name;
-                        req.session.schoolNum = req.body.schoolNum;
-                        req.session.email = req.body.email;
-                        req.session.password = req.body.password;
-                        req.session.address = req.body.address;
-                        req.session.privateKey = req.body.privateKey;
-                        req.session.logined = true;
+                        // req.session.name = req.body.name;
+                        // req.session.schoolNum = req.body.schoolNum;
+                        // req.session.email = req.body.email;
+                        // req.session.password = req.body.password;
+                        // req.session.address = req.body.address;
+                        // req.session.privateKey = req.body.privateKey;
+                        // req.session.logined = true;
 
                         res.status(200);
                         res.set({
@@ -102,16 +101,26 @@ router.post('/login', function(req, res, next) {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
             });
-            res.json({"message": "此學號沒有註冊過"});
+            res.json({
+                "message" : "此學號沒有註冊過",
+                "name": "",
+                "schoolNum" : "",
+                "email" : "",
+                "password" : "",
+                "address" : "",
+                "privateKey" : "",
+                "logined" : false
+            });
+
         } else {
             if (logindata[0].password === req.body.password) {
-                req.session.name = logindata[0].name;
-                req.session.schoolNum = logindata[0].schoolNum;
-                req.session.email = logindata[0].email;
-                req.session.password = logindata[0].password;
-                req.session.address = logindata[0].address;
-                req.session.privateKey = logindata[0].privateKey;
-                req.session.logined = true;
+                // req.session.name = logindata[0].name;
+                // req.session.schoolNum = logindata[0].schoolNum;
+                // req.session.email = logindata[0].email;
+                // req.session.password = logindata[0].password;
+                // req.session.address = logindata[0].address;
+                // req.session.privateKey = logindata[0].privateKey;
+                // req.session.logined = true;
 
                 console.log(req.session.email);
                 console.log("登入成功");
@@ -120,7 +129,16 @@ router.post('/login', function(req, res, next) {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
                 });
-                res.json({"name": logindata[0].name});
+                res.json({
+                    "message" : "登入成功",
+                    "name": logindata[0].name,
+                    "schoolNum" : logindata[0].schoolNum,
+                    "email" : logindata[0].email,
+                    "password" : logindata[0].password,
+                    "address" : logindata[0].address,
+                    "privateKey" : logindata[0].privateKey,
+                    "logined" : true
+                        });
 
 
             } else { //沒找到密碼
@@ -130,7 +148,16 @@ router.post('/login', function(req, res, next) {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
                 });
-                res.json({"message": "密碼錯誤請重新輸入"});
+                res.json({
+                    "message" : "密碼錯誤請重新輸入",
+                    "name": "",
+                    "schoolNum" : "",
+                    "email" : "",
+                    "password" : "",
+                    "address" : "",
+                    "privateKey" : "",
+                    "logined" : false
+                });
             }
         }
     });
