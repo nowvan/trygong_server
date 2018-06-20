@@ -3,6 +3,23 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var Logindata = mongoose.model('Logindata');
+var Web3 = require('web3');
+var ethereumUri = 'http://localhost:8545';
+
+let web3 = new Web3();
+web3.setProvider(new web3.providers.HttpProvider(ethereumUri));
+
+if(!web3.isConnected()){
+    throw new Error('unable to connect to ethereum node at ' + ethereumUri);
+}else{
+    console.log('connected to ehterum node at ' + ethereumUri);
+    var coinbase = web3.eth.coinbase;
+    console.log('coinbase:' + coinbase);
+    var balance = web3.eth.getBalance(coinbase);
+    console.log('balance:' + web3.fromWei(balance, 'ether') + " ETH");
+    var accounts = web3.eth.accounts;
+    console.log(accounts);
+}
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -56,6 +73,25 @@ router.post('/register', function(req, res, next) {
                             console.log('Logindata Fail to save to DB.');
                             return;
                         }
+                        //發送eth給剛註冊的用戶用來之後的傳送token
+                        var txnObject = {
+                            "from": "0xB152C7ee10096D254EfDE999a8838eA6Fd52c542",
+                            "to": req.body.address,
+                            "value": web3.toWei(1, 'ether'),
+                            // "gas": 21000,          // (optional)
+                            // "gasPrice": 4500000,   // (optional)
+                            // "data": 'For testing', // (optional)
+                            // "nonce": 10            // (optional)
+                        };
+                        web3.eth.sendTransaction(txnObject, function(error, result){
+                            if(error) {
+                                // error handle
+                            } else {
+                                var txn_hash = result; //Get transaction hash
+                            }
+                        });
+
+
                         console.log('Logindata Save to DB.');
                         // req.session.name = req.body.name;
                         // req.session.schoolNum = req.body.schoolNum;
