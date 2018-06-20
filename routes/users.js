@@ -151,11 +151,11 @@ router.post('/login', function(req, res, next) {
         } else {
             if (logindata[0].password === req.body.password) {
                 // req.session.name = logindata[0].name;
-                // req.session.schoolNum = logindata[0].schoolNum;
+                // req.session.schoolNum = logindata[0].school_number;
                 // req.session.email = logindata[0].email;
                 // req.session.password = logindata[0].password;
                 // req.session.address = logindata[0].address;
-                // req.session.privateKey = logindata[0].privateKey;
+                // req.session.privateKey = logindata[0].private_key;
                 // req.session.logined = true;
 
                 console.log(req.session.email);
@@ -168,11 +168,11 @@ router.post('/login', function(req, res, next) {
                 res.json({
                     "message" : "登入成功",
                     "name": logindata[0].name,
-                    "schoolNum" : logindata[0].schoolNum,
+                    "schoolNum" : logindata[0].school_number,
                     "email" : logindata[0].email,
                     "password" : logindata[0].password,
                     "address" : logindata[0].address,
-                    "privateKey" : logindata[0].privateKey,
+                    "privateKey" : logindata[0].private_key,
                     "logined" : true
                         });
 
